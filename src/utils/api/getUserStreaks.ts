@@ -7,7 +7,7 @@ export interface IStreakModel {
   streakCurrent: number,
   currentStreakStart: Date,
   currentStreakEnd: Date,
-  contributionData: Contribution[],
+  contributionGraph: string,
 }
 
 export default async (username: string): Promise<IStreakModel> => {
@@ -18,7 +18,6 @@ export default async (username: string): Promise<IStreakModel> => {
   let streakCurrent: number = 0;
   let currentStreakStart: string = '';
   let currentStreakEnd: string = days[0].attribs['data-date'];
-  let contributionData: Contribution[] = [];
 
   days.some((day: CheerioElement, idx: number) => {
     const currentDayCount = parseInt(day.attribs['data-count']);
@@ -32,11 +31,6 @@ export default async (username: string): Promise<IStreakModel> => {
 
       streakCurrent++;
       currentStreakStart = day.attribs['data-date'];
-      contributionData.push({
-        date: currentStreakStart,
-        count: currentDayCount,
-        color: day.attribs['color'],
-      });
     }
   });
 
@@ -46,6 +40,7 @@ export default async (username: string): Promise<IStreakModel> => {
       dateStringToDate(currentStreakStart),
     currentStreakEnd:
       dateStringToDate(currentStreakEnd),
-    contributionData,
+    contributionGraph:
+      $('.js-calendar-graph-svg').html() || '',
   };
 };

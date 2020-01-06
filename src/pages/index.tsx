@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import Layout from '../components/atoms/Layout';
+import Profile from '../components/atoms/Profile';
+import Graph from '../components/molecules/Graph';
 
 import { IStreakModel } from '../utils/api/getUserStreaks';
 
@@ -28,28 +30,6 @@ const loadStreakData = async (
   );
   console.log(userData);
   callback(userData);
-  renderContributions(users, userData);
-};
-
-const renderContributions = async (
-  users: string[],
-  streaks: UserData,
-) => {
-  // const { drawContributions } = await import('github-contributions-canvas');
-  users.map((username: string) => {
-    const canvasElement = document.getElementById(`graph-${username}`);
-    console.log(canvasElement);
-    console.log(users, streaks);
-    // drawContributions(
-    //   canvasElement,
-    //   {
-    //     data: streaks[username],
-    //     username: username,
-    //     themeName: "standard",
-    //     footerText: "Made by @sallar - github-contributions.now.sh"
-    //   },
-    // );
-  });
 };
 
 const Home: React.FC = () => {
@@ -69,8 +49,12 @@ const Home: React.FC = () => {
         <Card
           key={`user-${idx}`}
         >
+          <Profile
+            username={username}
+          />
+          {streaks ? JSON.stringify(streaks[username].streakCurrent) : ''}
           <Graph
-            id={`graph-${username}`}
+            username={username}
           />
         </Card>
       ))}
@@ -81,7 +65,4 @@ const Home: React.FC = () => {
 export default Home;
 
 const Card = styled.div`
-`;
-
-const Graph = styled.canvas`
 `;
