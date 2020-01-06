@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-import { getUserStreaks } from '../../utils/api';
+import getUserStreaks, { IStreakModel } from '../../utils/api/getUserStreaks';
 
 interface IHttpRequest extends IncomingMessage {
   query: {
@@ -11,7 +11,8 @@ interface IHttpRequest extends IncomingMessage {
 export default async (req: IHttpRequest, res: ServerResponse) => {
   const { username } = req.query;
   res.setHeader('Content-Type', 'application/json');
-  const result = getUserStreaks(username);
+
+  const result: IStreakModel = await getUserStreaks(username);
   return res.end(
     JSON.stringify(result),
   );
