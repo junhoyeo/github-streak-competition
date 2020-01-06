@@ -8,6 +8,8 @@ import Graph from '../components/molecules/Graph';
 
 import { IStreakModel } from '../utils/api/getUserStreaks';
 
+import '../styles/override.scss';
+
 const getStreaksByUsername = async (username: string): Promise<IStreakModel> => {
   const { data } = await axios.get(`/api/${username}`);
   return data;
