@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import Layout from '../components/atoms/Layout';
-import Profile from '../components/atoms/Profile';
-import Graph from '../components/molecules/Graph';
+import Card from '../components/organisms/Card';
+import Header from '../components/templates/Header';
 
 import { IStreakModel } from '../utils/api/getUserStreaks';
 
@@ -35,7 +35,7 @@ const loadStreakData = async (
 };
 
 const Home: React.FC = () => {
-  const [users, setUsers] = useState<string[]>(['junhoyeo']);
+  const [users, setUsers] = useState<string[]>(['junhoyeo', 'MinSeungHyun', 'suhdonghwi', 'uhmtoto']);
   const [streaks, setSteaks] = useState<UserData>();
 
   useEffect(
@@ -47,24 +47,20 @@ const Home: React.FC = () => {
 
   return (
     <Layout>
-      {users.map((username: string, idx: number) => (
-        <Card
-          key={`user-${idx}`}
-        >
-          <Profile
+      <Header />
+      {users.map((username: string, idx: number) => {
+        // const current = streaks?.[username]?.streakCurrent || 0;
+        const today = streaks?.[username]?.contributions[0]?.count || 0;
+        return (
+          <Card
+            key={`user-${idx}`}
+            current={today}
             username={username}
           />
-          {streaks ? JSON.stringify(streaks[username].streakCurrent) : ''}
-          <Graph
-            username={username}
-          />
-        </Card>
-      ))}
+        );
+      })}
     </Layout>
   );
 };
 
 export default Home;
-
-const Card = styled.div`
-`;

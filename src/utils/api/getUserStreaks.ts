@@ -3,11 +3,16 @@ import cheerio from 'cheerio';
 
 import dateStringToDate from '../dateStringToDate';
 
+export type Contribution = {
+  count: number;
+  date: Date,
+};
+
 export interface IStreakModel {
   streakCurrent: number,
   currentStreakStart: Date,
   currentStreakEnd: Date,
-  contributionGraph: string,
+  contributions: Contribution[],
 }
 
 export default async (username: string): Promise<IStreakModel> => {
@@ -15,6 +20,7 @@ export default async (username: string): Promise<IStreakModel> => {
   const $ = cheerio.load(html);
   const days = $('.js-calendar-graph rect.day').get().reverse();
 
+  let contributions: Contribution[] = [];
   let streakCurrent: number = 0;
   let currentStreakStart: string = '';
   let currentStreakEnd: string = days[0].attribs['data-date'];
@@ -31,16 +37,20 @@ export default async (username: string): Promise<IStreakModel> => {
 
       streakCurrent++;
       currentStreakStart = day.attribs['data-date'];
+      contributions.push({
+        count: currentDayCount,
+        date:
+          dateStringToDate(currentStreakStart),
+      });
     }
   });
 
   return {
+    contributions,
     streakCurrent,
     currentStreakStart:
       dateStringToDate(currentStreakStart),
     currentStreakEnd:
       dateStringToDate(currentStreakEnd),
-    contributionGraph:
-      $('.js-calendar-graph-svg').html() || '',
   };
 };
