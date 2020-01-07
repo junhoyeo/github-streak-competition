@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 
 import Layout from '../components/atoms/Layout';
 import Card from '../components/organisms/Card';
@@ -20,12 +19,12 @@ type UserData = {
 };
 
 const loadStreakData = async (
-  users: string[],
+  usernames: string[],
   callback: (streak: UserData) => void,
 ): Promise<void> => {
   const userData: UserData = {};
   await Promise.all(
-    users.map(async (username: string) => {
+    usernames.map(async (username: string) => {
       const streakData: IStreakModel = await getStreaksByUsername(username);
       userData[username] = streakData;
     }),
@@ -35,22 +34,23 @@ const loadStreakData = async (
 };
 
 const Home: React.FC = () => {
-  const [users, setUsers] = useState<string[]>(['junhoyeo', 'MinSeungHyun', 'suhdonghwi', 'uhmtoto']);
-  const [streaks, setSteaks] = useState<UserData>();
+  // todo: fix structure as list with name field
+  const [usernames, setUsernames] = useState<string[]>(['junhoyeo', 'MinSeungHyun', 'suhdonghwi', 'uhmtoto']);
+  const [data, setData] = useState<UserData>();
 
   useEffect(
     () => {
-      loadStreakData(users, setSteaks);
+      loadStreakData(usernames, setData);
     },
-    [users],
+    [usernames],
   );
 
   return (
     <Layout>
       <Header />
-      {users.map((username: string, idx: number) => {
+      {usernames.map((username: string, idx: number) => {
         // const current = streaks?.[username]?.streakCurrent || 0;
-        const today = streaks?.[username]?.contributions[0]?.count || 0;
+        const today = data?.[username]?.contributions[0]?.count || 0;
         return (
           <Card
             key={`user-${idx}`}
