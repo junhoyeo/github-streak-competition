@@ -14,6 +14,11 @@ type CardProps = {
 };
 
 const Card: React.FC<CardProps> = ({ current, username }) => {
+  const onClickProfile = () => {
+    const win = window.open(`https://github.com/${username}`);
+    win?.focus();
+  };
+
   return (
     <Container>
       <Row>
@@ -21,7 +26,11 @@ const Card: React.FC<CardProps> = ({ current, username }) => {
           username={username}
         />
         <Info>
-          <Name>{username}</Name>
+          <Name
+            onClick={onClickProfile}
+          >
+            {username}
+          </Name>
           <Streak>
             오늘 <strong>{current}개</strong> 커밋 작성!
           </Streak>
@@ -60,6 +69,12 @@ const Info = styled.div`
 const Name = styled(TextForTitle)`
   margin: 0;
   font-size: 1.2rem;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
 `;
 
 const Streak = styled(Text)`
