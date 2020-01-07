@@ -54,6 +54,7 @@ export const CreateModal: React.FC<CreateModalProps> = ({
 
   return (
     <ReactModal
+      ariaHideApp={false}
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={stylesForModal}
