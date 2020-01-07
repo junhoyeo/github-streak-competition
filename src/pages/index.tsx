@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
+import Button from '../components/atoms/Button';
 import Layout from '../components/atoms/Layout';
 import Card from '../components/organisms/Card';
 import Header from '../components/templates/Header';
@@ -59,6 +60,9 @@ const Home: React.FC = () => {
           />
         );
       })}
+      <Button>
+        새로운 멤버 추가 👋
+      </Button>
     </Layout>
   );
 };
