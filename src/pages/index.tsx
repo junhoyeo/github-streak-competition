@@ -32,7 +32,6 @@ const loadStreakData = async (
       userData[username] = streakData;
     }),
   );
-  console.log(userData);
   callback(userData);
 };
 
@@ -41,6 +40,17 @@ const Home: React.FC = () => {
   const [usernames, setUsernames] = useState<string[]>([]);
   const [data, setData] = useState<UserData>();
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [isLoaded, setLoaded] = useState<boolean>(false);
+
+  const getToday = (username: string): number =>
+    data?.[username]?.contributions[0]?.count || 0;
+
+  const func = async () => {
+    if (!isLoaded) {
+      await loadStreakData(usernames, setData);
+      setLoaded(true);
+    };
+  };
 
   useEffect(
     () => setUsernames(
@@ -51,9 +61,23 @@ const Home: React.FC = () => {
 
   useEffect(
     () => {
-      loadStreakData(usernames, setData);
+      func();
     },
     [usernames],
+  );
+
+  useEffect(
+    () => {
+      if (isLoaded) {
+        // todo: animate sorting
+        setUsernames(
+          [...usernames].sort((a: string, b: string) => {
+            return getToday(b) - getToday(a);
+          }),
+        );
+      };
+    },
+    [data],
   );
 
   const onOpenModal = () => setModalOpen(true);
@@ -65,7 +89,7 @@ const Home: React.FC = () => {
       <Header />
       {usernames.map((username: string, idx: number) => {
         // const current = streaks?.[username]?.streakCurrent || 0;
-        const today = data?.[username]?.contributions[0]?.count || 0;
+        const today = getToday(username);
         return (
           <Card
             key={`user-${idx}`}
